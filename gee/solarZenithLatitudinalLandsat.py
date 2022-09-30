@@ -14,8 +14,8 @@ Map
 """
 Extract the solar zenith angle along different latitudes
 """
-date_start = "2000-01-01"
-date_end   = "2022-12-31"
+date_start = "2013-03-18"
+date_end   = "2014-12-31"
 # poi = ee.Geometry.Point(-37.38, 72.58) # GRIP
 
 arctic_circle_transect = ee.Geometry.LineString(
@@ -31,8 +31,8 @@ zermatt_transect = ee.Geometry.LineString(
 )
 Map.addLayer(zermatt_transect, {}, 'Mt. Zermatt')
 
-dataset = ee.ImageCollection('MODIS/061/MOD09GA').select("SolarZenith") # TERRA
-# dataset = ee.ImageCollection('MODIS/061/MYD09GA').select("SolarZenith") # AQUA
+dataset = ee.ImageCollection("LANDSAT/LC08/C02/T1_TOA").select("SZA") 
+
 # %% get the solar zenith angle profile
 
 def get_solar_zenith_angle_transect(img_col, scale, transect):
@@ -45,7 +45,7 @@ def get_solar_zenith_angle_transect(img_col, scale, transect):
     colFilter = ee.Filter.And(
         ee.Filter.geometry(transect), # filterbounds not available on python api https://github.com/google/earthengine-api/issues/83
         ee.Filter.date(date_start, date_end),
-        ee.Filter.dayOfYear(173, 173) # June 22 near summer solstice
+        ee.Filter.dayOfYear(173, 173) # doy 173+-8 June 22 near summer solstice
     )    
     img_col = img_col.filter(colFilter)
 
@@ -76,18 +76,18 @@ df_arctic_ciricle = get_solar_zenith_angle_transect(
     scale=500,
     transect=arctic_circle_transect
 )
-df_everest = get_solar_zenith_angle_transect(
-    img_col=dataset,
-    scale=500,
-    transect=everest_transect
-)
-df_zermatt = get_solar_zenith_angle_transect(
-    img_col=dataset,
-    scale=500,
-    transect=zermatt_transect
-)
+# df_everest = get_solar_zenith_angle_transect(
+#     img_col=dataset,
+#     scale=500,
+#     transect=everest_transect
+# )
+# df_zermatt = get_solar_zenith_angle_transect(
+#     img_col=dataset,
+#     scale=500,
+#     transect=zermatt_transect
+# )
 
-df_arctic_ciricle.to_csv("sza_Arctic_Circle_Terra.csv", mode="w")
+# df_arctic_ciricle.to_csv("sza_Arctic_Circle_Terra.csv", mode="w")
 # df_arctic_ciricle.to_csv("sza_Arctic_Circle_Aqua.csv", mode="w")
 
 # %%

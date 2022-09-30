@@ -11,6 +11,9 @@ Map = geemap.Map()
 Map
 
 # %%
+"""
+Extract the solar zenith angle along different latitudes
+"""
 date_start = "2000-01-01"
 date_end   = "2022-12-31"
 # poi = ee.Geometry.Point(-37.38, 72.58) # GRIP
@@ -33,8 +36,12 @@ dataset = ee.ImageCollection('MODIS/061/MOD09GA').select("SolarZenith") # TERRA
 # %% get the solar zenith angle profile
 
 def get_solar_zenith_angle_transect(img_col, scale, transect):
-    """this is to extract solar zenith angle along the transect"""
-
+    """
+    This is to extract solar zenith angle along the transect.
+    img_col: the image collection
+    scale: in meters
+    transect: vector defined by ee.LineString
+    """
     colFilter = ee.Filter.And(
         ee.Filter.geometry(transect), # filterbounds not available on python api https://github.com/google/earthengine-api/issues/83
         ee.Filter.date(date_start, date_end),
@@ -80,6 +87,9 @@ df_zermatt = get_solar_zenith_angle_transect(
     transect=zermatt_transect
 )
 
+df_arctic_ciricle.to_csv("sza_Arctic_Circle_Terra.csv", mode="w")
+# df_arctic_ciricle.to_csv("sza_Arctic_Circle_Aqua.csv", mode="w")
+
 # %%
 fig, ax = plt.subplots(figsize=(8,5))
 
@@ -107,7 +117,8 @@ sns.lineplot(
     markers=True,
     marker="o"
 )
-plt.axvline(x=pd.to_datetime(""))
+plt.axvline(x=pd.to_datetime("2020-02-27"), linestyle="--", color="k") # Terra
+# plt.axvline(x=pd.to_datetime("2021-03-18"), linestyle="--", color="k") # Aqua
 ax.set(
     xlabel="",
     ylabel="Solar Zenith Angle ($^\circ$)"
@@ -118,4 +129,15 @@ fig.savefig("print/solar_zenith_angle_terra.png", dpi=300, bbox_inches="tight")
 fig.savefig("print/solar_zenith_angle_terra.pdf", dpi=300, bbox_inches="tight")
 # fig.savefig("print/solar_zenith_angle_aqua.png", dpi=300, bbox_inches="tight")
 # fig.savefig("print/solar_zenith_angle_aqua.pdf", dpi=300, bbox_inches="tight")
+# %%
+
+# df = pd.read_csv("sza_Arctic_Circle_Terra.csv")
+# df["datetime"] = pd.to_datetime(df.datetime)
+# df["biasSZA"] =  df.SolarZenith - df.SolarZenith.mean()
+
+# sns.lineplot(
+#     data=df,
+#     x="datetime",
+#     y="biasSZA"
+# )
 # %%
