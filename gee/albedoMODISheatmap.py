@@ -31,7 +31,7 @@ greenlandmask = ee.Image('OSU/GIMP/2000_ICE_OCEAN_MASK') \
                    .select('ice_mask').eq(1) #'ice_mask', 'ocean_mask'
 colFilter = ee.Filter.And(
         ee.Filter.date(date_start, date_end),
-        ee.Filter.calendarRange(6,8,"month")
+        # ee.Filter.calendarRange(6,8,"month")
         # ee.Filter.dayOfYear(173, 173) # June 22 near summer solstice
     )    
 
@@ -46,8 +46,8 @@ meanAlbedo = dataset.mean()
 
 geemap.ee_export_image_to_asset(
     meanAlbedo,
-    description="meanAlbedoGrISmodisJJA",
-    assetId="meanAlbedoGrISmodisJJA",
+    description="meanAlbedoGrISmodis",
+    assetId="meanAlbedoGrISmodis",
     region=aoi,
     scale=500,
     maxPixels=1e11
