@@ -92,33 +92,37 @@ df_arctic_ciricle.to_csv("sza_Arctic_Circle_Terra.csv", mode="w")
 
 # %%
 fig, ax = plt.subplots(figsize=(8,5))
+plt.axvline(x=pd.to_datetime("2020-02-27"), linestyle="--", color="k") # Terra
+plt.axvline(x=pd.to_datetime("2002-07-01"), linestyle="--", color="k") # Terra
+# plt.axvline(x=pd.to_datetime("2021-03-18"), linestyle="--", color="k") # Aqua
 
 sns.lineplot(
-    data=df_arctic_ciricle,
+    data=df_arctic_ciricle[df_arctic_ciricle.datetime > pd.to_datetime("2002-01-01")],
     x="datetime",
     y="SolarZenith",
     label="Arctic Circle (66.5$^\circ$N)",
     markers=True,
     marker="o"
 )
+sns.scatterplot(data=df_arctic_ciricle, x="datetime",  y="SolarZenith")
 sns.lineplot(
-    data=df_zermatt,
+    data=df_zermatt[df_zermatt.datetime > pd.to_datetime("2002-01-01")],
     x="datetime",
     y="SolarZenith",
     label="Mt. Zermatt (46.0207$^\circ$N)",
     markers=True,
     marker="o"
 )
+sns.scatterplot(data=df_zermatt, x="datetime", y="SolarZenith")
 sns.lineplot(
-    data=df_everest,
+    data=df_everest[df_everest.datetime > pd.to_datetime("2002-01-01")],
     x="datetime",
     y="SolarZenith",
     label="Mt. Everest (27.9881$^\circ$N)",
     markers=True,
     marker="o"
 )
-plt.axvline(x=pd.to_datetime("2020-02-27"), linestyle="--", color="k") # Terra
-# plt.axvline(x=pd.to_datetime("2021-03-18"), linestyle="--", color="k") # Aqua
+sns.scatterplot(data=df_everest, x="datetime", y="SolarZenith")
 ax.set(
     xlabel="",
     ylabel="Solar Zenith Angle ($^\circ$)"
@@ -131,13 +135,15 @@ fig.savefig("print/solar_zenith_angle_terra.pdf", dpi=300, bbox_inches="tight")
 # fig.savefig("print/solar_zenith_angle_aqua.pdf", dpi=300, bbox_inches="tight")
 # %%
 
-# df = pd.read_csv("sza_Arctic_Circle_Terra.csv")
-# df["datetime"] = pd.to_datetime(df.datetime)
-# df["biasSZA"] =  df.SolarZenith - df.SolarZenith.mean()
+df = pd.read_csv("sza_Arctic_Circle_Terra.csv")
+df["datetime"] = pd.to_datetime(df.datetime)
+df["biasSZA"] =  df.SolarZenith - df.SolarZenith.mean()
 
-# sns.lineplot(
-#     data=df,
-#     x="datetime",
-#     y="biasSZA"
-# )
+sns.lineplot(
+    data=df,
+    x="datetime",
+    y="biasSZA",
+    markers=True,
+    marker="o"
+)
 # %%
