@@ -41,17 +41,22 @@ dataset = ee.ImageCollection('MODIS/006/MOD10A1') \
     .map(lambda img: img.updateMask(greenlandmask))
 
 """export albedo image to asset to save time"""
-aoi = ee.Image('OSU/GIMP/2000_ICE_OCEAN_MASK').geometry()#.bounds() 
-meanAlbedo = dataset.mean()   
+# aoi = ee.Image('OSU/GIMP/2000_ICE_OCEAN_MASK').geometry()#.bounds() 
+# meanAlbedo = dataset.mean()   
 
-geemap.ee_export_image_to_asset(
-    meanAlbedo,
-    description="meanAlbedoGrISmodis",
-    assetId="meanAlbedoGrISmodis",
-    region=aoi,
-    scale=500,
-    maxPixels=1e11
-)
+# geemap.ee_export_image_to_asset(
+#     meanAlbedo,
+#     description="meanAlbedoGrISmodis",
+#     assetId="meanAlbedoGrISmodis",
+#     region=aoi,
+#     scale=500,
+#     maxPixels=1e11
+# )
+
+"""import mean albedo"""
+# meanAlbedo = ee.Image("projects/ee-deeppurple/assets/meanAlbedoGrISmodisJJA")
+meanAlbedo = ee.Image("projects/ee-deeppurple/assets/meanAlbedoGrISmodis")
+
 '''
 how to get corner coordinates: 
 https://gis.stackexchange.com/questions/318959/get-lon-lat-of-a-top-left-corner-for-geometry-in-google-earth-engine
@@ -110,6 +115,16 @@ img_col = ee.ImageCollection(ee.List(date_range.iterate(getMonthly, ee.List([]))
 col_size = img_col.size().getInfo()
 imgList = img_col.toList(col_size)
 
+"""optional: export monthly anomaly img collection to google drive"""
+# aoi = ee.Image('OSU/GIMP/2000_ICE_OCEAN_MASK').geometry()#.bounds() 
+# geemap.ee_export_image_collection_to_drive(
+#     img_col,
+#     folder="export",
+#     scale=500,
+#     maxPixels=1e11,
+#     region=aoi
+# )
+
 # %%
 """
 ref: 
@@ -117,7 +132,7 @@ Justin Braaten
 https://gis.stackexchange.com/questions/362958/plotting-viirs-against-longitude-in-google-earth-engine
 """
 # latImg = ee.Image.pixelLonLat().select('latitude')
-latStep = 1
+latStep = 0.25
 latStarts = ee.List.sequence(60, 84-latStep, latStep)
 
 for i in range(col_size):
@@ -155,6 +170,29 @@ for i in range(col_size):
         dfnew["timestamp"] = imgtime
         df = pd.concat([df, dfnew])
 
+# df.to_csv("latitudinal_JJA_0.5degree.csv")
+df.to_csv("latitudinal_0.25degree.csv")
 
+# %%
+df["anomaly"] = df["Snow_Albedo_Daily_Tile"] / 100
+df["datetime"] = pd.to_datetime(df.timestamp, unit="ms").dt.strftime("%Y-%m")
+
+fig, ax = plt.subplots(figsize=(20,5))
+
+sns.heatmap(
+    df.pivot("lat", "datetime", "anomaly").iloc[::-1],
+    vmin=-0.25,
+    vmax=0.25,
+    cmap="coolwarm_r",
+    cbar_kws={'label': 'albedo anomaly'},
+    xticklabels = 12, 
+)
+ax.set(
+    xlabel="",
+    ylabel="Latitude ($^\circ$N)"
+);
+
+# fig.savefig("print/albedo_anomaly_JJA_latitudinal.png", dpi=300, bbox_inches="tight")
+fig.savefig("print/albedo_anomaly_latitudinal.png", dpi=300, bbox_inches="tight")
 
 # %%
