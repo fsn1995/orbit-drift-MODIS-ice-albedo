@@ -39,7 +39,7 @@ dataset = ee.ImageCollection('MODIS/061/MOD11A1').select("Day_view_time")
 
 def get_view_time_transect(img_col, scale, transect):
     """
-    This is to extract solar zenith angle along the transect.
+    This is to extract view time along the transect.
     img_col: the image collection
     scale: in meters
     transect: vector defined by ee.LineString
