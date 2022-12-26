@@ -18,7 +18,7 @@ position = states(sat,"CoordinateFrame","geographic");
 lat = position(1,:);
 lon = position(2,:);
 alt = position(3,:);
-
+% df = table(timeline, lat, lon, alt, y, m, d);
 %%
 summerSolstice = datetime(2002, 6, 22):years(1):datetime(2022, 6, 22);
 
@@ -32,3 +32,21 @@ for i=1:length(summerSolstice)
     title(string(indexTIme));
 end
 
+%%
+% figure;
+% for i=1:length(summerSolstice)
+%     indexTIme = summerSolstice(i);
+%     [yi, mi, di] = ymd(indexTIme);
+%     index = y==yi & m ==mi & d == di;
+%     geoplot(lat(index), lon(index), DisplayName=string(yi*10000+ mi*100+ di));
+%     hold on
+% end
+% geolimits([60 75],[-90 0])
+% %%
+% yi = 2003;
+% mi = 6;
+% di = 22;
+% 
+% index = y==yi & m ==mi & d == di;
+% geoplot(lat(index), lon(index), DisplayName=string(yi*10000+ mi*100+ di));
+% geolimits([60 75],[-90 0])
