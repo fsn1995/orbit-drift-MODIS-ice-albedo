@@ -89,25 +89,25 @@ sns.lineplot(
     data=df_arctic_circle.resample('M', on='datetime').mean(),
     x="datetime",
     y="ViewTime",
-    label="Arctic Circle (66.5$^\circ$N)",
+    label="Arctic Circle (66.5000$^\circ$N)",
 )
 sns.lineplot(
     data=df_zermatt.resample('M', on='datetime').mean(),
     x="datetime",
     y="ViewTime",
-    label="Mt. Zermatt (46.0207$^\circ$N)",
+    label="Mt. Zermatt  (46.0207$^\circ$N)",
 )
 sns.lineplot(
     data=df_everest.resample('M', on='datetime').mean(),
     x="datetime",
     y="ViewTime",
-    label="Mt. Everest (27.9881$^\circ$N)",
+    label="Mt. Everest  (27.9881$^\circ$N)",
 )
 ax.set(
     xlabel="",
     ylabel="Local Solar Time"
 );
-sns.move_legend(ax, "upper center", bbox_to_anchor=(0.5, 1.5))
+sns.move_legend(ax, "upper center", bbox_to_anchor=(0.5, 1.5), title=None)
 plt.xlim(pd.to_datetime("2000-02-24"), pd.to_datetime("2022-12-31"));
 # plt.ylim(10.4, 12.4)
 plt.yticks([10.5, 11.0, 11.5, 12.0], ['10:30', '11:00', '11:30', '12:00']);  # Set text labels.
@@ -119,4 +119,76 @@ fig.savefig("print/view_time_daily_terra.pdf", dpi=300, bbox_inches="tight")
 # fig.savefig("print/view_time_daily_aqua.pdf", dpi=300, bbox_inches="tight")
 
 
+# %%
+fig, ax = plt.subplots(2, 1, figsize=(12,9))
+ax[0].axvline(x=pd.to_datetime("2020-02-27"), linestyle="--", color="k") # Terra
+ax[0].axvline(x=pd.to_datetime("2002-07-01"), linestyle="--", color="k") # Terra
+ax[1].axvline(x=pd.to_datetime("2021-03-18"), linestyle="--", color="k") # Aqua
+
+sns.lineplot(
+    ax=ax[0],
+    data=df_arctic_circle.resample('M', on='datetime').mean(),
+    x="datetime",
+    y="ViewTime",
+    label="Arctic Circle (66.5000$^\circ$N)",
+)
+sns.lineplot(
+    ax=ax[0],
+    data=df_zermatt.resample('M', on='datetime').mean(),
+    x="datetime",
+    y="ViewTime",
+    label="Mt. Zermatt  (46.0207$^\circ$N)",
+)
+sns.lineplot(
+    ax=ax[0],
+    data=df_everest.resample('M', on='datetime').mean(),
+    x="datetime",
+    y="ViewTime",
+    label="Mt. Everest  (27.9881$^\circ$N)",
+)
+ax[0].set(
+    xlabel="",
+    ylabel="Local Solar Time",
+    xticklabels=[]
+);
+
+sns.lineplot(
+    ax=ax[1],
+    data=df_arctic_circle1.resample('M', on='datetime').mean(),
+    x="datetime",
+    y="ViewTime",
+    label="Arctic Circle (66.5000$^\circ$N)",
+)
+sns.lineplot(
+    ax=ax[1],
+    data=df_zermatt1.resample('M', on='datetime').mean(),
+    x="datetime",
+    y="ViewTime",
+    label="Mt. Zermatt  (46.0207$^\circ$N)",
+)
+sns.lineplot(
+    ax=ax[1],
+    data=df_everest1.resample('M', on='datetime').mean(),
+    x="datetime",
+    y="ViewTime",
+    label="Mt. Everest  (27.9881$^\circ$N)",
+)
+ax[1].set(
+    xlabel="",
+    ylabel="Local Solar Time"
+);
+
+sns.move_legend(ax[0], "upper center", bbox_to_anchor=(0.5, 1.62), title=None)
+ax[0].set_xlim(pd.to_datetime("2000-02-24"), pd.to_datetime("2022-12-31"))
+ax[1].set_xlim(pd.to_datetime("2000-02-24"), pd.to_datetime("2022-12-31"))
+# plt.ylim(10.4, 12.4)
+ax[0].set_yticks([10.5, 11.0, 11.5, 12.0], ['10:30', '11:00', '11:30', '12:00']);  # Set text labels.
+ax[1].set_yticks([12.25, 12.5, 12.75, 13.0, 13.25], ['12:15', '12:30', '12:45', '13:00', '13:15']);  # Set text labels.
+ax[1].get_legend().remove()
+ax[0].annotate("a) Terra", xy=(-0.12, 1),  xycoords='axes fraction')
+ax[1].annotate("b) Aqua", xy=(-0.12, 1),  xycoords='axes fraction')
+fig.tight_layout(h_pad=0.5)
+
+fig.savefig("print/view_time_MODIS.png", dpi=300, bbox_inches="tight")
+fig.savefig("print/view_time_MODIS.pdf", dpi=300, bbox_inches="tight")
 # %%
