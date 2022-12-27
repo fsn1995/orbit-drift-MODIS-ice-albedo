@@ -6,6 +6,7 @@ import vaex as vx
 import numpy as np
 from scipy import stats
 from pylr2.regress2 import regress2
+from sklearn.metrics import mean_squared_error #, r2_score
 sns.set_theme(style="darkgrid", font="Arial", font_scale=2)
 # %%
 '''MOD'''
@@ -90,13 +91,15 @@ ax.set_aspect('equal', 'box')
 ax.set_xlim(0,1)
 ax.set_ylim(0,1)
 ax.annotate(
-    '2002-2020 JJA\nn:%.1e' % (len(df_filtered.albedoMYD.values)), xy=(0.5, 0.15),  
+    '2002-2019 JJA\nn:%s' % (format(len(df_filtered.albedoMYD.values), ',')), xy=(0.5, 0.15),  
     xycoords='data', horizontalalignment='left', verticalalignment='top'
 )
 df_filtered.viz.heatmap("albedoMYD", "albedoMOD", what=np.log(vx.stat.count()), show=True,
                         xlabel="MYD albedo", ylabel="MOD albedo")
 print('RMA: \ny={0:.4f}x+{1:.4f}\nRMA_r:{2:.2f} \n k std: {3:.4f} \n b std: {4:.4f}'
       .format(k, b, rma_results['r'], rma_results['std_slope'], rma_results['std_intercept']))
+print('mean bias is: %.4f' % np.mean(df_filtered.albedoMYD.values - df_filtered.albedoMOD.values))      
+print('RMSE is %.4f' % (mean_squared_error(df_filtered.albedoMOD.values, df_filtered.albedoMYD.values, squared=False)))
 fig.savefig("print/albedo/modis20022020scatter.png", dpi=300, bbox_inches="tight")
 
 
@@ -125,13 +128,15 @@ ax.set_aspect('equal', 'box')
 ax.set_xlim(0,1)
 ax.set_ylim(0,1)
 ax.annotate(
-    '2020 JJA\nn:%.1e' % (len(df_filtered.albedoMYD.values)), xy=(0.5, 0.15),  
+    '2020 JJA\nn:%s' % (format(len(df_filtered.albedoMYD.values), ',')), xy=(0.5, 0.15),  
     xycoords='data', horizontalalignment='left', verticalalignment='top'
 )
 df_filtered.viz.heatmap("albedoMYD", "albedoMOD", what=np.log(vx.stat.count()), show=True,
                         xlabel="MYD albedo", ylabel="MOD albedo")
 print('RMA: \ny={0:.4f}x+{1:.4f}\nRMA_r:{2:.2f} \n k std: {3:.4f} \n b std: {4:.4f}'
       .format(k, b, rma_results['r'], rma_results['std_slope'], rma_results['std_intercept']))
+print('mean bias is: %.4f' % np.mean(df_filtered.albedoMYD.values - df_filtered.albedoMOD.values))   
+print('RMSE is %.4f' % (mean_squared_error(df_filtered.albedoMOD.values, df_filtered.albedoMYD.values, squared=False)))
 fig.savefig("print/albedo/modis2020scatter.png", dpi=300, bbox_inches="tight")
 
 
@@ -160,13 +165,15 @@ ax.set_aspect('equal', 'box')
 ax.set_xlim(0,1)
 ax.set_ylim(0,1)
 ax.annotate(
-    '2021-2022 JJA\nn:%.1e' % (len(df_filtered.albedoMYD.values)), xy=(0.5, 0.15),  
+    '2021-2022 JJA\nn:%s' % (format(len(df_filtered.albedoMYD.values), ',')), xy=(0.5, 0.15),  
     xycoords='data', horizontalalignment='left', verticalalignment='top'
 )
 df_filtered.viz.heatmap("albedoMYD", "albedoMOD", what=np.log(vx.stat.count()), show=True,
                         xlabel="MYD albedo", ylabel="MOD albedo")
 print('RMA: \ny={0:.4f}x+{1:.4f}\nRMA_r:{2:.2f} \n k std: {3:.4f} \n b std: {4:.4f}'
       .format(k, b, rma_results['r'], rma_results['std_slope'], rma_results['std_intercept']))
+print('mean bias is: %.4f' % np.mean(df_filtered.albedoMYD.values - df_filtered.albedoMOD.values))   
+print('RMSE is %.4f' % (mean_squared_error(df_filtered.albedoMOD.values, df_filtered.albedoMYD.values, squared=False)))
 fig.savefig("print/albedo/modis20212022scatter.png", dpi=300, bbox_inches="tight")
 
 
@@ -178,6 +185,41 @@ ax.set(xlabel = 'Albedo')
 ax.set_xlim(0,1)
 ax.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
 fig.savefig("print/albedo/modis20212022hist.png", dpi=300, bbox_inches="tight")
+
+#%% orbit drift impact
+'''
+orbit drift impact estimated from MYD
+'''
+years = np.arange(2002, 2021)
+for y in years:
+    df_filtered = df[df.year==y]
+    df_filtered["diff"] = df_filtered.albedoMYD - df_filtered.albedoMOD
+    # df_filtered.viz.histogram("diff", label=str(y))
+    print('Year: %d, diff mean=%.4f, diff median=%.4f, RMSE=%.4f' % (
+        y, np.mean(df_filtered["diff"].values), 
+        np.median(df_filtered["diff"].values),
+        mean_squared_error(df_filtered.albedoMOD.values, df_filtered.albedoMYD.values, squared=False)
+    ))
+#%%    
+fig, ax = plt.subplots(figsize=(7,3)) #figsize=(8,7)
+df_filtered = df[df.year==2019]
+df_filtered["diff"] = df_filtered.albedoMYD - df_filtered.albedoMOD
+df_filtered.viz.histogram("diff", label="2019", what=vx.stat.count() / len(df_filtered))
+df_filtered = df[df.year==2020]
+df_filtered["diff"] = df_filtered.albedoMYD - df_filtered.albedoMOD
+df_filtered.viz.histogram("diff", label="2020", what=vx.stat.count() / len(df_filtered))
+ax.plot([0,0], [0, 0.4], ls='--', label="Median(2019)=0.00", color=(0.2980392156862745, 0.4470588235294118, 0.6901960784313725))
+ax.plot([-0.01,-0.01], [0, 0.4], ls='--', label="Median(2020)=-0.01",  color=(0.8666666666666667, 0.5176470588235295, 0.3215686274509804))
+# use axvline will remove all xticks except (0,0), weird...
+# ax.axvline(x="0", ls='--', label="Median(2019)=0", color=(0.2980392156862745, 0.4470588235294118, 0.6901960784313725))
+# ax.axvline(x="-0.1", ls='--', label="Median(2020)=-0.01", color=(0.8666666666666667, 0.5176470588235295, 0.3215686274509804))
+ax.legend()
+ax.set_xlim(-0.5, 0.5)
+ax.set_ylim(0, 0.4)
+ax.set(xlabel="$\Delta$albedo (MYD-MOD)", ylabel="frequency")
+sns.move_legend(ax, "lower left", bbox_to_anchor=(-0.20, -1.3), ncol=2)
+fig.savefig("print/albedo/driftEffectMYD.png", dpi=300, bbox_inches="tight")
+
 
 #%%
 '''are MOD2020 statistically different from MYD<2020?'''
