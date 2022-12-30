@@ -2,6 +2,7 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import vaex as vx
 import numpy as np
 from scipy import stats
@@ -14,8 +15,8 @@ dfmod = pd.read_csv("/data/shunan/data/orbit/poiMOD5km.csv")
 coord = dfmod[".geo"].str.lstrip('[{"type":"Point","coordinates":[')
 coord = coord.str.rstrip(']}')
 coord = coord.str.split(",", expand=True)
-dfmod["lat"] = coord[1]
-dfmod["lon"] = coord[0]
+dfmod["lat"] = coord[1].astype(float)
+dfmod["lon"] = coord[0].astype(float)
 
 dfmod = dfmod.drop(columns=["count", "label", ".geo"]).melt(
     id_vars=["system:index" ,"lat", "lon"], var_name="date", value_name="albedo"
@@ -31,8 +32,8 @@ dfmyd = pd.read_csv("/data/shunan/data/orbit/poiMYD5km.csv")
 coord = dfmyd[".geo"].str.lstrip('[{"type":"Point","coordinates":[')
 coord = coord.str.rstrip(']}')
 coord = coord.str.split(",", expand=True)
-dfmyd["lat"] = coord[1]
-dfmyd["lon"] = coord[0]
+dfmyd["lat"] = coord[1].astype(float)
+dfmyd["lon"] = coord[0].astype(float)
 
 dfmyd = dfmyd.drop(columns=["count", "label", ".geo"]).melt(
     id_vars=["system:index" ,"lat", "lon"], var_name="date", value_name="albedo"
@@ -218,8 +219,8 @@ ax.set_xlim(-0.5, 0.5)
 ax.set_ylim(0, 0.4)
 ax.set(xlabel="$\Delta$albedo (MYD-MOD)", ylabel="frequency")
 sns.move_legend(ax, "lower left", bbox_to_anchor=(-0.20, -1.3), ncol=2)
-fig.savefig("print/albedo/driftEffectMYD.png", dpi=300, bbox_inches="tight")
-
+fig.savefig("print/driftEffectMYD.png", dpi=300, bbox_inches="tight")
+fig.savefig("print/driftEffectMYD.pdf", dpi=300, bbox_inches="tight")
 
 #%%
 '''are MOD2020 statistically different from MYD<2020?'''
@@ -233,7 +234,66 @@ stats.ranksums(df[df.year<2020].albedoMYD.values,
                alternative='less')
 
 
+#%% scatter plot of median/mean albedo
 
+df = pd.merge(left=dfmod, right=dfmyd.drop(columns=["year", "month", "day"]), 
+              on=["lat", "lon", "date"]).dropna()
+df = df[np.abs( (df.albedoMOD - df.albedoMYD) / (df.albedoMOD + df.albedoMYD) ) < 0.5]
+#%%
+df_filtered = df.groupby(["date"]).median()
+
+
+fig, ax = plt.subplots(2,2, sharey='row', figsize=(8,6)) #figsize=(8,7)
+
+sns.scatterplot(ax=ax[0,0], data=df_filtered, x="date", y="albedoMYD", label="MYD", alpha=0.5)
+sns.scatterplot(ax=ax[0,0], data=df_filtered, x="date", y="albedoMOD", label="MOD", alpha=0.5)
+ax[0,0].set_xlim(pd.to_datetime("2019-05-28"), pd.to_datetime("2019-09-03"))
+ax[0,0].set_ylim(0.7, 0.95)
+ax[0,0].legend().remove()
+ax[0,0].xaxis.set_major_formatter(mdates.DateFormatter('%b-%d'))
+ax[0,0].set_xticks(ax[0,0].get_xticks()[::4])
+ax[0,0].set(xlabel="", ylabel="albedo (median)")
+ax[0,0].annotate("a)", xy=(0.85, 0.1),  xycoords='axes fraction')
+
+sns.scatterplot(ax=ax[0,1], data=df_filtered, x="date", y="albedoMYD", label="MYD", alpha=0.5)
+sns.scatterplot(ax=ax[0,1], data=df_filtered, x="date", y="albedoMOD", label="MOD", alpha=0.5)
+ax[0,1].set_xlim(pd.to_datetime("2020-05-28"), pd.to_datetime("2020-09-03"))
+ax[0,1].xaxis.set_major_formatter(mdates.DateFormatter('%b-%d'))
+ax[0,1].set_xticks(ax[0,1].get_xticks()[::4])
+ax[0,1].set(xlabel="")
+ax[0,1].annotate("b)", xy=(0.85, 0.1),  xycoords='axes fraction')
+sns.move_legend(ax[0,1], "upper left", bbox_to_anchor=(-0.9, 1.35), ncol=2)
+
+# fig.savefig("print/modismedian.pdf", dpi=300, bbox_inches="tight")
+# fig.savefig("print/modismedian.png", dpi=300, bbox_inches="tight")
+
+df_filtered = df.groupby(["date"]).mean()
+
+# fig, ax = plt.subplots(1,2, sharey='row', figsize=(6,2)) #figsize=(8,7)
+
+sns.scatterplot(ax=ax[1,0], data=df_filtered, x="date", y="albedoMYD", label="MYD", alpha=0.5)
+sns.scatterplot(ax=ax[1,0], data=df_filtered, x="date", y="albedoMOD", label="MOD", alpha=0.5)
+ax[1,0].set_xlim(pd.to_datetime("2019-05-28"), pd.to_datetime("2019-09-03"))
+ax[1,0].set_ylim(0.65, 0.89)
+ax[1,0].legend().remove()
+ax[1,0].xaxis.set_major_formatter(mdates.DateFormatter('%b-%d'))
+ax[1,0].set_xticks(ax[1,0].get_xticks()[::4])
+ax[1,0].set(xlabel="2019", ylabel="albedo (mean)")
+ax[1,0].annotate("c)", xy=(0.85, 0.1),  xycoords='axes fraction')
+
+sns.scatterplot(ax=ax[1,1], data=df_filtered, x="date", y="albedoMYD", label="MYD", alpha=0.5)
+sns.scatterplot(ax=ax[1,1], data=df_filtered, x="date", y="albedoMOD", label="MOD", alpha=0.5)
+ax[1,1].set_xlim(pd.to_datetime("2020-05-28"), pd.to_datetime("2020-09-03"))
+ax[1,1].legend().remove()
+ax[1,1].xaxis.set_major_formatter(mdates.DateFormatter('%b-%d'))
+ax[1,1].set_xticks(ax[1,1].get_xticks()[::4])
+ax[1,1].set(xlabel="2020")
+ax[1,1].annotate("d)", xy=(0.85, 0.1),  xycoords='axes fraction')
+# sns.move_legend(ax[1,1], "upper left", bbox_to_anchor=(-1.1, 1.5), ncol=2)
+# fig.savefig("print/modismean.pdf", dpi=300, bbox_inches="tight")
+# fig.savefig("print/modismean.png", dpi=300, bbox_inches="tight")
+fig.savefig("print/modisTimeSeries.pdf", dpi=300, bbox_inches="tight")
+fig.savefig("print/modisTimeSeries.png", dpi=300, bbox_inches="tight")
 # %%
 # fig, ax = plt.subplots(figsize=(8,3))
 # ax2 = ax.twinx()
