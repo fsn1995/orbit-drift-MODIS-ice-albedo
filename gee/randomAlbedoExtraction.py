@@ -231,7 +231,7 @@ def ee_array_to_df(arr, list_of_bands):
     df = pd.DataFrame(df.values[1:], columns=headers)
 
     # Remove rows without data inside.
-    df = df[['longitude', 'latitude', 'time', *list_of_bands]]#.dropna()
+    df = df[['longitude', 'latitude', 'time', *list_of_bands]].dropna()
 
     # Convert the data to numeric values.
     for band in list_of_bands:
@@ -241,13 +241,13 @@ def ee_array_to_df(arr, list_of_bands):
     # df['datetime'] = pd.to_datetime(df['time'], unit='ms')
 
     # Keep the columns of interest.
-    df = df[['time', 'longitude', 'latitude', *list_of_bands]].dropna()
+    df = df[['time', 'longitude', 'latitude', *list_of_bands]]
 
     return df
 
 # %%
-date_start = ee.Date.fromYMD(2021, 1, 1)
-date_end = ee.Date.fromYMD(2022, 12, 31)
+date_start = ee.Date.fromYMD(2020, 1, 1)
+date_end = ee.Date.fromYMD(2020, 12, 31)
 
 # %%
 for i in range(0, len(sampleList)):
@@ -307,13 +307,14 @@ for i in range(0, len(sampleList)):
   pointAlbedo = multiSat.getRegion(aoi, 500).getInfo() # The number e.g. 500 is the buffer size
   dfalbedo = ee_array_to_df(pointAlbedo, ['visnirAlbedo'])
   dfalbedo["id"] = i
-  pointAlbedoFile = '/data/shunan/data/orbit/poiHSA5km.csv'
+  pointAlbedoFile = '/data/shunan/data/orbit/poiHSA500m.csv'
 
+  dfalbedo.to_csv(pointAlbedoFile, mode='a', index=False, header=False)
 
-  if i==0:
-      dfalbedo.dropna().to_csv(pointAlbedoFile, mode='w', index=False, header=True)
-  else:
-      dfalbedo.dropna().to_csv(pointAlbedoFile, mode='a', index=False, header=False)
+  # if i==0:
+  #     dfalbedo.dropna().to_csv(pointAlbedoFile, mode='w', index=False, header=True)
+  # else:
+  #     dfalbedo.dropna().to_csv(pointAlbedoFile, mode='a', index=False, header=False)
 
 
 
