@@ -262,6 +262,15 @@ ax[1,1].annotate("d)", xy=(0.85, 0.1),  xycoords='axes fraction')
 # fig.savefig("print/modismean.png", dpi=300, bbox_inches="tight")
 fig.savefig("print/modisTimeSeries.pdf", dpi=300, bbox_inches="tight")
 fig.savefig("print/modisTimeSeries.png", dpi=300, bbox_inches="tight")
+
+
+#%%
+df = pd.read_excel("stat.xlsx", sheet_name="bias")
+fig, ax = plt.subplots(figsize=(6,3)) 
+sns.scatterplot(data=df, x="year", y="MYD-MOD")
+ax.set(xlabel="", ylabel="bias (MYD-MOD)")
+fig.savefig("print/modisBias.pdf", dpi=300, bbox_inches="tight")
+fig.savefig("print/modisBias.png", dpi=300, bbox_inches="tight")
 # %%
 # fig, ax = plt.subplots(figsize=(8,3))
 # ax2 = ax.twinx()
