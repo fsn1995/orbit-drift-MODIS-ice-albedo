@@ -230,7 +230,7 @@ ax[0,1].set_xticks(ax[0,1].get_xticks()[::4])
 ax[0,1].set(xlabel="")
 ax[0,1].annotate("b)", xy=(0.85, 0.1),  xycoords='axes fraction')
 sns.move_legend(ax[0,1], "upper left", bbox_to_anchor=(-0.9, 1.35), ncol=2)
-
+# sns.move_legend(ax[0,1], "upper left", bbox_to_anchor=(-1.65, 1.4), ncol=3)
 # fig.savefig("print/modismedian.pdf", dpi=300, bbox_inches="tight")
 # fig.savefig("print/modismedian.png", dpi=300, bbox_inches="tight")
 
@@ -262,7 +262,8 @@ ax[1,1].annotate("d)", xy=(0.85, 0.1),  xycoords='axes fraction')
 # fig.savefig("print/modismean.png", dpi=300, bbox_inches="tight")
 fig.savefig("print/modisTimeSeries.pdf", dpi=300, bbox_inches="tight")
 fig.savefig("print/modisTimeSeries.png", dpi=300, bbox_inches="tight")
-
+# fig.savefig("print/modisTimeSeriesCorrected.pdf", dpi=300, bbox_inches="tight")
+# fig.savefig("print/modisTimeSeriesCorrected.png", dpi=300, bbox_inches="tight")
 
 #%%
 df = pd.read_excel("stat.xlsx", sheet_name="bias")
