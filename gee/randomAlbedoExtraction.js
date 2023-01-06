@@ -9,7 +9,7 @@ var imgfilter = ee.Filter.and(
 );
 var dataset = ee.ImageCollection('MODIS/006/MOD10A1')
                 .filter(imgfilter)
-                .select("Snow_Albedo_Daily_Tile");
+                .select("Snow_Albedo_Daily_Tile"); // Snow_Albedo_Daily_Tile_Class
 
 
 // var datasetRename = dataset.map(function(img){

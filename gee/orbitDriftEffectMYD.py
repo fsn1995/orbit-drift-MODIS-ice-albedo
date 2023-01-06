@@ -182,7 +182,7 @@ ax.plot([0.01, 0.01], [0, 0.45], ls='--', label="Median(2020)=0.01",  color=(0.8
 ax.legend()
 ax.set_xlim(-0.5, 0.5)
 ax.set_ylim(0, 0.45)
-ax.set(xlabel="$\Delta$albedo (MOD-MYD)", ylabel="frequency")
+ax.set(xlabel=r"$\Delta \alpha$ (MOD-MYD)", ylabel="frequency")
 sns.move_legend(ax, "lower left", bbox_to_anchor=(-0.18, -1.3), ncol=2)
 fig.savefig("print/driftEffectMYD.png", dpi=300, bbox_inches="tight")
 fig.savefig("print/driftEffectMYD.pdf", dpi=300, bbox_inches="tight")

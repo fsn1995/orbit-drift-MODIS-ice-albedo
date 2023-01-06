@@ -246,8 +246,8 @@ def ee_array_to_df(arr, list_of_bands):
     return df
 
 # %%
-date_start = ee.Date.fromYMD(2020, 1, 1)
-date_end = ee.Date.fromYMD(2020, 12, 31)
+date_start = ee.Date.fromYMD(2000, 1, 1)
+date_end = ee.Date.fromYMD(2022, 12, 31)
 
 # %%
 for i in range(0, len(sampleList)):
@@ -309,12 +309,12 @@ for i in range(0, len(sampleList)):
   dfalbedo["id"] = i
   pointAlbedoFile = '/data/shunan/data/orbit/poiHSA500m.csv'
 
-  dfalbedo.to_csv(pointAlbedoFile, mode='a', index=False, header=False)
+  # dfalbedo.to_csv(pointAlbedoFile, mode='a', index=False, header=False)
 
-  # if i==0:
-  #     dfalbedo.dropna().to_csv(pointAlbedoFile, mode='w', index=False, header=True)
-  # else:
-  #     dfalbedo.dropna().to_csv(pointAlbedoFile, mode='a', index=False, header=False)
+  if i==0:
+      dfalbedo.dropna().to_csv(pointAlbedoFile, mode='w', index=False, header=True)
+  else:
+      dfalbedo.dropna().to_csv(pointAlbedoFile, mode='a', index=False, header=False)
 
 
 
