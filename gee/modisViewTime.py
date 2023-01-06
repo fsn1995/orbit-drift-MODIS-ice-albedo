@@ -105,7 +105,7 @@ sns.lineplot(
 )
 ax.set(
     xlabel="",
-    ylabel="Local Solar Time"
+    ylabel="Local Time"
 );
 sns.move_legend(ax, "upper center", bbox_to_anchor=(0.5, 1.5), title=None)
 plt.xlim(pd.to_datetime("2000-02-24"), pd.to_datetime("2022-12-31"));
@@ -148,7 +148,7 @@ sns.lineplot(
 )
 ax[0].set(
     xlabel="",
-    ylabel="Local Solar Time",
+    ylabel="Local Time",
     xticklabels=[]
 );
 
@@ -175,7 +175,7 @@ sns.lineplot(
 )
 ax[1].set(
     xlabel="",
-    ylabel="Local Solar Time"
+    ylabel="Local Time"
 );
 
 sns.move_legend(ax[0], "upper center", bbox_to_anchor=(0.5, 1.62), title=None)
@@ -191,4 +191,5 @@ fig.tight_layout(h_pad=0.5)
 
 fig.savefig("print/view_time_MODIS.png", dpi=300, bbox_inches="tight")
 fig.savefig("print/view_time_MODIS.pdf", dpi=300, bbox_inches="tight")
+fig.savefig("print/view_time_MODIS.svg", dpi=300, bbox_inches="tight")
 # %%
