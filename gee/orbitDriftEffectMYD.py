@@ -8,6 +8,7 @@ import numpy as np
 from scipy import stats
 from pylr2.regress2 import regress2
 from sklearn.metrics import mean_squared_error #, r2_score
+import altair as alt
 sns.set_theme(style="darkgrid", font="Arial", font_scale=2)
 # %%
 '''MOD'''
@@ -44,29 +45,52 @@ dfmyd["year"] = dfmyd.date.dt.year.astype(float)
 dfmyd["month"] = dfmyd.date.dt.month.astype(float)
 dfmyd["day"] = dfmyd.date.dt.day.astype(float)
 
-# %%
+#%%
 ''' how many nan values per year?'''
-df = dfmod.albedo.isna().groupby(dfmod.year).sum().reset_index(name='count')
-df["length"] = dfmod.albedo.groupby(dfmod.year).count().reset_index(name='length')["length"]
-df["ratio"] = df["count"] / df["length"] *100
-df["ratiolabel"] = (df["count"] / df["length"] *100).round(1).astype(str) +'%'
+dfclass = pd.read_csv("/data/shunan/data/orbit/poiMODIS5kmclass.csv")
+coord = dfclass[".geo"].str.lstrip('[{"type":"Point","coordinates":[')
+coord = coord.str.rstrip(']}')
+coord = coord.str.split(",", expand=True)
+dfclass["lat"] = coord[1].astype(float)
+dfclass["lon"] = coord[0].astype(float)
 
+dfclass = dfclass.drop(columns=["count", "label", ".geo"]).melt(
+    id_vars=["system:index" ,"lat", "lon"], var_name="date", value_name="classvalue"
+).dropna()
+dfclass["date"] = pd.to_datetime(dfclass.date.str.strip("_Snow_Albedo_Daily_Tile_Class"), format="%Y_%m_%d")
+dfclass["year"] = dfclass.date.dt.year#.astype(float)
+dfclass["month"] = dfclass.date.dt.month#.astype(float)
+dfclass["day"] = dfclass.date.dt.day#.astype(float)
 
-fig, ax = plt.subplots(figsize=(6,2.5))
-# plt.style.use("seaborn-dark")
-ax2 = ax.twinx()
-ax.bar(df.year, df["length"], label="total")
-ax.bar(df.year, df["count"], label="invalid")
-ax.legend()
-# ax.grid(None)
-ax2.scatter(df.year, df.ratio, color="g", marker="o")
-sns.move_legend(ax, "upper center", bbox_to_anchor=(0.55, 1.35), ncol=2)
-# ax.set_xticks(ax.get_xticks()[::5])
-ax.set(xlabel="", ylabel="count")
-ax2.set(xlabel="", ylabel="invalid ratio (%)")
-ax2.yaxis.label.set_color('g')
-ax2.tick_params(axis='y', colors='g')
-ax2.grid(None)
+dfclassplot = pd.DataFrame()
+dfclassplot["year"] = dfclass.year.unique()
+for i in dfclass.classvalue.unique():
+    dfpass = dfclass[dfclass.classvalue == i]
+    countYear = dfclass.groupby("year").count().reset_index(drop=False).classvalue
+    dfclassplot[str(i)] = dfpass.groupby("year").count().reset_index(drop=False).classvalue 
+
+dfclassplot = dfclassplot.rename(columns={
+    '101.0': 'No decision',
+    '111.0': 'Night',
+    '125.0': 'Land',
+    '137.0': 'Inland water',
+    '139.0': 'Ocean',
+    '150.0': 'Cloud',
+    '250.0': 'Missing',
+    '251.0': 'Self-shadowning',
+    '254.0': 'Non-production mask'
+})
+
+fig, ax = plt.subplots(figsize=(6,4))
+dfclassplot.plot(
+    kind="bar", stacked=True, x="year", ax=ax
+)
+sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1.1))
+ax.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+ax.set(xlabel="")
+ax.set_xticks(ax.get_xticks()[::5])
+ax.tick_params(axis='x', labelrotation = 45)
+
 fig.savefig("print/invalidmod.png", dpi=300, bbox_inches="tight")
 fig.savefig("print/invalidmod.pdf", dpi=300, bbox_inches="tight")
 
@@ -269,7 +293,41 @@ fig.savefig("print/albedo/modis2020hist.png", dpi=300, bbox_inches="tight")
 #                alternative='less')
 
 
+# df = dfmod.albedo.isna().groupby(dfmod.year).sum().reset_index(name='count')
+# df["length"] = dfmod.albedo.groupby(dfmod.year).count().reset_index(name='length')["length"]
+# df["ratio"] = df["count"] / df["length"] *100
+# df["ratiolabel"] = (df["count"] / df["length"] *100).round(1).astype(str) +'%'
 
+
+# fig, ax = plt.subplots(1,2, figsize=(16,4))
+
+# ax2 = ax[0].twinx()
+# ax[0].bar(df.year, df["length"], label="total")
+# ax[0].bar(df.year, df["count"], label="invalid")
+# ax[0].legend()
+# # ax.grid(None)
+# ax2.scatter(df.year, df.ratio, color="g", marker="o")
+# sns.move_legend(ax[0], "upper center", bbox_to_anchor=(0.50, 1.25), ncol=2)
+# # ax.set_xticks(ax.get_xticks()[::5])
+# ax[0].set(xlabel="", ylabel="count")
+# ax2.set(xlabel="", ylabel="invalid ratio (%)")
+# ax2.yaxis.label.set_color('g')
+# ax2.tick_params(axis='y', colors='g')
+# ax2.grid(None)
+# ax[0].tick_params(axis='x', labelrotation = 45)
+# ax[0].annotate("a)", xy=(0.05, 0.8),  xycoords='axes fraction')
+
+# dfclassplot.plot(
+#     kind="bar", stacked=True, x="year", ax=ax[1]
+# )
+# sns.move_legend(ax[1], "upper left", bbox_to_anchor=(1, 1.25))
+# ax[1].ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+# ax[1].set(xlabel="")
+# ax[1].set_xticks(ax[1].get_xticks()[::5])
+# ax[1].tick_params(axis='x', labelrotation = 45)
+# ax[1].annotate("b)", xy=(0.05, 0.8),  xycoords='axes fraction')
+# # fig.savefig("print/invalidmod.png", dpi=300, bbox_inches="tight")
+# # fig.savefig("print/invalidmod.pdf", dpi=300, bbox_inches="tight")
 #%%
 # df = pd.read_excel("stat.xlsx", sheet_name="bias")
 # fig, ax = plt.subplots(figsize=(6,3)) 
