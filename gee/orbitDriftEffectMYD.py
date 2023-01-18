@@ -8,7 +8,6 @@ import numpy as np
 from scipy import stats
 from pylr2.regress2 import regress2
 from sklearn.metrics import mean_squared_error #, r2_score
-import altair as alt
 sns.set_theme(style="darkgrid", font="Arial", font_scale=2)
 # %%
 '''MOD'''
@@ -77,7 +76,7 @@ dfclassplot = dfclassplot.rename(columns={
     '139.0': 'Ocean',
     '150.0': 'Cloud',
     '250.0': 'Missing',
-    '251.0': 'Self-shadowning',
+    '251.0': 'Self-shadowing',
     '254.0': 'Non-production mask'
 })
 
