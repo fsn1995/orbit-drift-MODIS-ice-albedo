@@ -2,7 +2,7 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-# import matplotlib.dates as mdates
+import matplotlib.dates as mdates
 # import vaex as vx
 # import numpy as np
 # from scipy import stats
@@ -25,6 +25,97 @@ sns.move_legend(ax, "upper left", bbox_to_anchor=(-0.05, 1.3), ncol=3, title=Non
 
 fig.savefig("print/dt.pdf", dpi=300, bbox_inches="tight")
 fig.savefig("print/dt.png", dpi=300, bbox_inches="tight")
+
+
+#%% UPE_L
+dfaws = pd.read_csv("/data/shunan/data/orbit/UPE_L.csv").rename(columns={
+    "albedo": "PROMICE"
+})
+dfaws["time"] = pd.to_datetime(dfaws.time)
+
+dfmod = pd.read_csv("/data/shunan/data/orbit/UPE_L_MOD.csv")
+dfmod["time"] = pd.to_datetime(dfmod["datetime"])
+dfmod["MOD"] = dfmod["Snow_Albedo_Daily_Tile"] / 100
+
+dfmyd = pd.read_csv("/data/shunan/data/orbit/UPE_L_MYD.csv")
+dfmyd["time"] = pd.to_datetime(dfmyd["datetime"])
+dfmyd["MYD"] = dfmyd["Snow_Albedo_Daily_Tile"] / 100
+
+dfhsa = pd.read_csv("/data/shunan/data/orbit/UPE_L_HSA.csv").rename(columns={
+    "visnirAlbedo": "HSA"
+})
+dfhsa["time"] = pd.to_datetime(dfhsa["datetime"]).dt.date
+dfhsa = dfhsa.groupby("time").mean().reset_index()
+
+dfs3 = pd.read_csv("/data/shunan/data/orbit/UPE_Ls3albedo.csv").rename(columns={
+    "s3albedo": "S3"
+})
+dfs3["time"] = pd.to_datetime(dfs3.imdate)
+#%%
+# fig, ax = plt.subplots(1,4, sharey='row', figsize=(8,6)) #figsize=(8,7)
+fig, ax = plt.subplots(1,4, sharey='row', figsize=(20,4)) #figsize=(8,7)
+
+sns.lineplot(ax=ax[0], data=dfaws, x="time", y="PROMICE", label="PROMICE", color="k")
+sns.scatterplot(ax=ax[0], data=dfmod, x="time", y="MOD", label="MOD", alpha=0.5)
+sns.scatterplot(ax=ax[0], data=dfmyd, x="time", y="MYD", label="MYD", alpha=0.5)
+sns.scatterplot(ax=ax[0], data=dfhsa, x="time", y="HSA", label="HSA", alpha=0.5)
+sns.scatterplot(ax=ax[0], data=dfs3, x="time", y="S3", label="S3", alpha=0.5)
+ax[0].set_xlim(pd.to_datetime("2019-06-01"), pd.to_datetime("2019-08-31"))
+ax[0].xaxis.set_major_formatter(mdates.DateFormatter('%b-%d'))
+ax[0].set_ylim(0.25, 1)
+sns.move_legend(ax[0], "upper left", bbox_to_anchor=(0.5, 1.25), ncol=5)
+ax[0].set_xticks(ax[0].get_xticks()[::2])
+ax[0].set(xlabel="2019", ylabel="albedo")
+ax[0].annotate("a)", xy=(0.85, 0.1),  xycoords='axes fraction')
+
+sns.lineplot(ax=ax[1], data=dfaws, x="time", y="PROMICE", label="PROMICE", color="k")
+sns.scatterplot(ax=ax[1], data=dfmod, x="time", y="MOD", label="MOD", alpha=0.5)
+sns.scatterplot(ax=ax[1], data=dfmyd, x="time", y="MYD", label="MYD", alpha=0.5)
+sns.scatterplot(ax=ax[1], data=dfhsa, x="time", y="HSA", label="HSA", alpha=0.5)
+sns.scatterplot(ax=ax[1], data=dfs3, x="time", y="S3", label="S3", alpha=0.5)
+ax[1].set_xlim(pd.to_datetime("2020-06-01"), pd.to_datetime("2020-08-31"))
+ax[1].xaxis.set_major_formatter(mdates.DateFormatter('%b-%d'))
+ax[1].set_ylim(0.25, 1)
+ax[1].legend().remove()
+ax[1].set_xticks(ax[1].get_xticks()[::2])
+ax[1].set(xlabel="2020", ylabel="")
+ax[1].annotate("b)", xy=(0.85, 0.1),  xycoords='axes fraction')
+
+sns.lineplot(ax=ax[2], data=dfaws, x="time", y="PROMICE", label="PROMICE", color="k")
+sns.scatterplot(ax=ax[2], data=dfmod, x="time", y="MOD", label="MOD", alpha=0.5)
+sns.scatterplot(ax=ax[2], data=dfmyd, x="time", y="MYD", label="MYD", alpha=0.5)
+sns.scatterplot(ax=ax[2], data=dfhsa, x="time", y="HSA", label="HSA", alpha=0.5)
+sns.scatterplot(ax=ax[2], data=dfs3, x="time", y="S3", label="S3", alpha=0.5)
+ax[2].set_xlim(pd.to_datetime("2021-06-01"), pd.to_datetime("2021-08-31"))
+ax[2].xaxis.set_major_formatter(mdates.DateFormatter('%b-%d'))
+ax[0].set_ylim(0.25, 1)
+ax[2].legend().remove()
+
+ax[2].set_xticks(ax[2].get_xticks()[::2])
+ax[2].set(xlabel="2021", ylabel="")
+ax[2].annotate("c)", xy=(0.85, 0.1),  xycoords='axes fraction')
+
+sns.lineplot(ax=ax[3], data=dfaws, x="time", y="PROMICE", label="PROMICE", color="k")
+sns.scatterplot(ax=ax[3], data=dfmod, x="time", y="MOD", label="MOD", alpha=0.5)
+sns.scatterplot(ax=ax[3], data=dfmyd, x="time", y="MYD", label="MYD", alpha=0.5)
+sns.scatterplot(ax=ax[3], data=dfhsa, x="time", y="HSA", label="HSA", alpha=0.5)
+sns.scatterplot(ax=ax[3], data=dfs3, x="time", y="S3", label="S3", alpha=0.5)
+ax[3].set_xlim(pd.to_datetime("2022-06-01"), pd.to_datetime("2022-08-31"))
+ax[3].xaxis.set_major_formatter(mdates.DateFormatter('%b-%d'))
+ax[0].set_ylim(0.25, 1)
+ax[3].legend().remove()
+
+ax[3].set_xticks(ax[3].get_xticks()[::2])
+ax[3].set(xlabel="2022", ylabel="")
+ax[3].annotate("d)", xy=(0.85, 0.1),  xycoords='axes fraction')
+
+fig.savefig("print/timeSeries.png", dpi=300, bbox_inches="tight")
+fig.savefig("print/timeSeries.pdf", dpi=300, bbox_inches="tight")
+
+
+
+
+#%%
 
 # # %%
 # '''MOD'''
