@@ -82,7 +82,7 @@ df_zermatt = get_view_time_transect(
 # %%
 fig, ax = plt.subplots(figsize=(12,5))
 plt.axvline(x=pd.to_datetime("2020-02-27"), linestyle="--", color="k") # Terra
-plt.axvline(x=pd.to_datetime("2002-07-01"), linestyle="--", color="k") # Terra
+plt.axvline(x=pd.to_datetime("2002-01-01"), linestyle="--", color="k") # Terra
 # plt.axvline(x=pd.to_datetime("2021-03-18"), linestyle="--", color="k") # Aqua
 
 sns.lineplot(
@@ -122,7 +122,7 @@ fig.savefig("print/view_time_daily_terra.pdf", dpi=300, bbox_inches="tight")
 # %%
 fig, ax = plt.subplots(2, 1, figsize=(12,9))
 ax[0].axvline(x=pd.to_datetime("2020-02-27"), linestyle="--", color="k") # Terra
-ax[0].axvline(x=pd.to_datetime("2002-07-01"), linestyle="--", color="k") # Terra
+ax[0].axvline(x=pd.to_datetime("2002-01-01"), linestyle="--", color="k") # Terra
 ax[1].axvline(x=pd.to_datetime("2021-03-18"), linestyle="--", color="k") # Aqua
 
 sns.lineplot(
