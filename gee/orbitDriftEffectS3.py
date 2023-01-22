@@ -28,19 +28,18 @@ dfmod["year"] = dfmod.date.dt.year.astype(float)
 dfmod["month"] = dfmod.date.dt.month.astype(float)
 dfmod["day"] = dfmod.date.dt.day.astype(float)
 
+
 #%%
-'''HSA'''
-dfhsa = pd.read_csv("/data/shunan/data/orbit/poiHSA500m.csv").rename(
-    columns={"longitude": "lon", "latitude": "lat", "visnirAlbedo": "HSA"}
-)
-dfhsa["date"] = pd.to_datetime(pd.to_datetime(dfhsa.time, unit="ms").dt.date)
-dfhsa = dfhsa[(dfhsa.HSA>0) & (dfhsa.HSA<1)].groupby(["id", "date"]).mean().reset_index()
+'''S3'''
+dfs3 = pd.read_csv("/data/shunan/data/orbit/pois3albedo.csv")
+dfs3["date"] = pd.to_datetime(dfs3.imdate)
+dfs3 = dfs3[(dfs3.s3albedo>0) & (dfs3.s3albedo<1)]
 
 
 #%%
-df = pd.merge(left=dfmod, right=dfhsa, 
-              on=["id", "date"]).dropna() #on=["lat", "lon", "date"]).dropna()
-df = df[np.abs( (df.albedoMOD - df.HSA) / (df.albedoMOD + df.HSA) ) < 0.5]
+df = pd.merge(left=dfmod, right=dfs3, 
+              on=["lat", "lon", "date"]).dropna() #on=["lat", "lon", "date"]).dropna()
+df = df[np.abs( (df.albedoMOD - df.s3albedo) / (df.albedoMOD + df.s3albedo) ) < 0.5]
 df = vx.from_pandas(df)
 
 
@@ -48,21 +47,23 @@ df = vx.from_pandas(df)
 '''
 orbit drift impact estimated from HSA
 '''
-years = np.arange(2000, 2023)
+years = np.arange(2017, 2021)
 for y in years:
     df_filtered = df[df.year==y]
-    df_filtered["diff"] = df_filtered.albedoMOD - df_filtered.HSA
+    df_filtered["diff"] = df_filtered.albedoMOD - df_filtered.s3albedo
     print('Year: %d, diff mean=%.4f, diff median=%.4f, RMSE=%.4f' % (
         y, np.mean(df_filtered["diff"].values), 
         np.median(df_filtered["diff"].values),
-        mean_squared_error(df_filtered.albedoMOD.values, df_filtered.HSA.values, squared=False)
+        mean_squared_error(df_filtered.albedoMOD.values, df_filtered.s3albedo.values, squared=False)
     ))
 
-df_filtered = df[(df.year>2001) &  (df.year<2020)]
-df_filtered["diff"] = df_filtered.albedoMOD - df_filtered.HSA
-print('Year: %s, diff mean=%.4f, diff median=%.4f, RMSE=%.4f' % (
-    "2002-2019", np.mean(df_filtered["diff"].values), 
-    np.median(df_filtered["diff"].values),
-    mean_squared_error(df_filtered.albedoMOD.values, df_filtered.HSA.values, squared=False)
-))
+# df_filtered = df[(df.year>2016) &  (df.year<2020)]
+# df_filtered["diff"] = df_filtered.albedoMOD - df_filtered.s3albedo
+# print('Year: %s, diff mean=%.4f, diff median=%.4f, RMSE=%.4f' % (
+#     "2017-2019", np.mean(df_filtered["diff"].values), 
+#     np.median(df_filtered["diff"].values),
+#     mean_squared_error(df_filtered.albedoMOD.values, df_filtered.s3albedo.values, squared=False)
+# ))
+
+
 # %%

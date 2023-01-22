@@ -108,7 +108,6 @@ years = np.arange(2002, 2021)
 for y in years:
     df_filtered = df[df.year==y]
     df_filtered["diff"] = df_filtered.albedoMOD - df_filtered.albedoMYD
-    # df_filtered.viz.histogram("diff", label=str(y))
     print('Year: %d, diff mean=%.4f, diff median=%.4f, RMSE=%.4f' % (
         y, np.mean(df_filtered["diff"].values), 
         np.median(df_filtered["diff"].values),
