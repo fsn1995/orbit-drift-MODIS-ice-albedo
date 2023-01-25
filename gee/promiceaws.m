@@ -55,3 +55,18 @@ cb.Label.String = "cloud cover";
 fontsize(gca,11,"points");
 exportgraphics(h,'print/cloudcover.pdf','Resolution',300);
 exportgraphics(h,'print/cloudcover.png','Resolution',600);
+
+%% UPE_L
+% daily
+% url = "https://dataverse.geus.dk/api/access/datafile/:persistentId?persistentId=doi:10.22008/FK2/IW73UU/SXYOAP";
+% hourly
+url = "https://dataverse.geus.dk/api/access/datafile/:persistentId?persistentId=doi:10.22008/FK2/IW73UU/805YZE";
+opts = detectImportOptions(url);
+opts.SelectedVariableNames = ["time", "albedo", "cc", "gps_lat", "gps_lon"];
+df = rmmissing(readtable(url, opts));
+[df.year, df.month, df.day] = ymd(datetime(df.time));
+index = (df.month > 5) & (df.month < 9);
+df = df(index,:);
+
+geoscatter(df.gps_lat, df.gps_lon);
+writetable(df, "H:\AU\orbit\UPE_L.csv", "WriteVariableNames", true, "WriteMode", 'overwrite')
