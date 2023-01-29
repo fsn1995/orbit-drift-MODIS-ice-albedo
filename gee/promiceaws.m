@@ -40,7 +40,7 @@ df.year = ymd(df.date);
 [p,h,stats] = ranksum(df.CloudCover(df.hour==9),df.CloudCover(df.hour==12),'alpha',0.01,...
 'tail','right')
 
-figure;
+f1 = figure;
 h = heatmap(df, "hour", "aws", "ColorVariable", "CloudCover", "ColorMethod", "median");
 h.Colormap = cmocean('balance');
 h.ColorLimits = [0 1];
@@ -56,6 +56,18 @@ fontsize(gca,11,"points");
 exportgraphics(h,'print/cloudcover.pdf','Resolution',300);
 exportgraphics(h,'print/cloudcover.png','Resolution',600);
 
+f2 = figure;
+meanCloud = groupsummary(df.CloudCover, df.hour, 'mean');
+b = boxchart(df.hour,df.CloudCover, 'Notch', 'on');
+hold on
+plot(0:23, meanCloud,'-o')
+grid on
+xlim([-1,24])
+xlabel("hour")
+ylabel("cloud cover")
+set(gca, 'XTick', 0:2:22, 'XTickLabelRotation', 0)
+exportgraphics(f2,'print/cloudcoverBox.pdf','Resolution',300);
+exportgraphics(f2,'print/cloudcoverBox.png','Resolution',300);
 %% UPE_L
 % daily
 % url = "https://dataverse.geus.dk/api/access/datafile/:persistentId?persistentId=doi:10.22008/FK2/IW73UU/SXYOAP";
