@@ -1,7 +1,7 @@
 #%% 
 import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 # import matplotlib.dates as mdates
 import vaex as vx
 import numpy as np
@@ -31,7 +31,7 @@ dfmod["day"] = dfmod.date.dt.day.astype(float)
 
 #%%
 '''S3'''
-dfs3 = pd.read_csv("/data/shunan/data/orbit/pois3albedo.csv")
+dfs3 = pd.read_csv("/data/shunan/data/orbit/pois3albedo.csv").dropna()
 dfs3["date"] = pd.to_datetime(dfs3.imdate)
 dfs3 = dfs3[(dfs3.s3albedo>0) & (dfs3.s3albedo<1)]
 
@@ -47,7 +47,7 @@ df = vx.from_pandas(df)
 '''
 orbit drift impact estimated from HSA
 '''
-years = np.arange(2017, 2021)
+years = np.arange(2017, 2023)
 for y in years:
     df_filtered = df[df.year==y]
     df_filtered["diff"] = df_filtered.albedoMOD - df_filtered.s3albedo
