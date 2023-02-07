@@ -4,10 +4,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 # import vaex as vx
-# import numpy as np
+import numpy as np
 from scipy import stats
-# from pylr2.regress2 import regress2
-# from sklearn.metrics import mean_squared_error #, r2_score
+from sklearn.metrics import mean_squared_error #, r2_score
 sns.set_theme(style="darkgrid", font="Arial", font_scale=2)
 #%%  Orbit drift effect figure
 df = pd.read_excel("stat.xlsx", sheet_name="dt")
@@ -78,6 +77,28 @@ df = pd.merge(left=dfs3, right=dfaws,
 df = df[df.time>pd.to_datetime("2019-01-01")]                  
 slope, intercept, r_value, p_value, std_err = stats.linregress(df.S3, df.PROMICE)
 print('S3: \ny={0:.4f}x+{1:.4f}\nOLS_r:{2:.2f}, p:{3:.3f}'.format(slope,intercept,r_value,p_value))
+
+#%% MOD and UPE_L
+df = pd.merge(left=dfmod, right=dfaws, on=["time"]).dropna()
+df = df[(df.time>pd.to_datetime("2020-01-01")) & (df.time<pd.to_datetime("2020-12-31"))]              
+slope, intercept, r_value, p_value, std_err = stats.linregress(df.MOD, df.PROMICE)
+rmse = mean_squared_error(df.PROMICE, df.MOD, squared=False)
+meandiff = np.mean(df.PROMICE - df.MOD)
+print('2020: \ny={0:.4f}x+{1:.4f}\nOLS_r:{2:.2f}, p:{3:.3f}, rmse:{4:.2f}, bias:{4:.2f}'.format(slope,intercept,r_value,p_value, rmse,meandiff))
+
+df = pd.merge(left=dfmod, right=dfaws, on=["time"]).dropna()
+df = df[(df.time>pd.to_datetime("2021-01-01")) & (df.time<pd.to_datetime("2021-12-31"))]              
+slope, intercept, r_value, p_value, std_err = stats.linregress(df.MOD, df.PROMICE)
+rmse = mean_squared_error(df.PROMICE, df.MOD, squared=False)
+meandiff = np.mean(df.PROMICE - df.MOD)
+print('2021: \ny={0:.4f}x+{1:.4f}\nOLS_r:{2:.2f}, p:{3:.3f}, rmse:{4:.2f}, bias:{4:.2f}'.format(slope,intercept,r_value,p_value, rmse,meandiff))
+
+df = pd.merge(left=dfmod, right=dfaws, on=["time"]).dropna()
+df = df[(df.time>pd.to_datetime("2022-01-01")) & (df.time<pd.to_datetime("2022-12-31"))]              
+slope, intercept, r_value, p_value, std_err = stats.linregress(df.MOD, df.PROMICE)
+rmse = mean_squared_error(df.PROMICE, df.MOD, squared=False)
+meandiff = np.mean(df.PROMICE - df.MOD)
+print('2022: \ny={0:.4f}x+{1:.4f}\nOLS_r:{2:.2f}, p:{3:.3f}, rmse:{4:.2f}, bias:{4:.2f}'.format(slope,intercept,r_value,p_value, rmse,meandiff))
 
 #%%
 # fig, ax = plt.subplots(1,4, sharey='row', figsize=(8,6)) #figsize=(8,7)
