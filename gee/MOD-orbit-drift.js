@@ -50,5 +50,17 @@ var dt = imDiff.filterDate("2020-01-01", "2020-12-31").map(function(image){
     return image.addBands(imDiff);
 }).select('dt').median();
 
+// ref: https://gis.stackexchange.com/a/348191
+// var coords = ee.Image.pixelLonLat()
+//   .divide(10)
+//   .floor()
+//   .int()
+//   .reduce(ee.Reducer.sum())
+//   .bitwiseAnd(1)
+//   .changeProj('EPSG:3411', 'EPSG:3857');
+var coords = ee.Image(1).changeProj('EPSG:3411', 'EPSG:3857');
+Map.addLayer(coords, {min:1, max:1, palette:'black'}, 'map grid');
+
 var palettes = require('users/gena/packages:palettes');
-Map.addLayer(dt.updateMask(greenlandmask), {min:-0.2, max:0.2, palette: palettes.colorbrewer.RdBu[11]}, 'd(t)');
+Map.addLayer(dt.updateMask(greenlandmask).changeProj('EPSG:3411', 'EPSG:3857'), {min:-0.15, max:0.15, palette: palettes.colorbrewer.RdBu[11]}, 'd(t)');
+Map.setCenter(0, -16, 5);
