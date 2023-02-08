@@ -7,7 +7,7 @@ var imgfilter = ee.Filter.and(
     ee.Filter.date('2000-01-01', '2022-12-31'),
     ee.Filter.calendarRange(6, 8, 'month')
 );
-var dataset = ee.ImageCollection('MODIS/006/MOD10A1')
+var dataset = ee.ImageCollection('MODIS/006/MOD10A1') // MODIS/061/MOD10A1
                 .filter(imgfilter)
                 .select("Snow_Albedo_Daily_Tile"); // Snow_Albedo_Daily_Tile_Class
 
