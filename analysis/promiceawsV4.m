@@ -9,7 +9,6 @@ for i = 1:length(urllist.data_name)
     
     df = rmmissing(readtable(string(urllist.data_url(i)), opts));
     
-%     [df.year, df.month, df.day] = ymd(datetime(df.time));
     awsname = erase(string(urllist.data_name(i)), "_hour");
     disp(awsname);
     df.aws = repmat(awsname, length(df.cc), 1);
@@ -18,7 +17,7 @@ for i = 1:length(urllist.data_name)
         df.gps_lon = df.gps_lon * -1;
     end
     [zd,zltr,zone] = timezone(df.gps_lon);
-    df.time = datetime(df.time, 'TimeZone','UTC') + hours(zd);
+    df.time = datetime(df.time, 'TimeZone','UTC') - hours(zd);
     if i == 1
         writetable(df, "promiceCloud4.csv", "WriteVariableNames", true, "WriteMode", 'overwrite');
     else
@@ -47,11 +46,11 @@ df.hour = hms(df.time);
 index = df.month > 5 & df.month <9;
 df = df(index,:);
 
-[p,h,stats] = ranksum(df.cc(df.hour==11),df.cc(df.hour==12),'alpha',0.01,...
+[p,h,stats] = ranksum(df.cc(df.hour==11),df.cc(df.hour==12),'alpha',0.05,...
 'tail','right')
-[p,h,stats] = ranksum(df.cc(df.hour==10),df.cc(df.hour==12),'alpha',0.01,...
+[p,h,stats] = ranksum(df.cc(df.hour==10),df.cc(df.hour==12),'alpha',0.05,...
 'tail','right')
-[p,h,stats] = ranksum(df.cc(df.hour==9),df.cc(df.hour==12),'alpha',0.01,...
+[p,h,stats] = ranksum(df.cc(df.hour==9),df.cc(df.hour==12),'alpha',0.05,...
 'tail','right')
 
 f1 = figure;

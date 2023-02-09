@@ -14,7 +14,13 @@ var imgfilter = ee.Filter.and(
 );
 
 var greenlandmask = ee.Image('OSU/GIMP/2000_ICE_OCEAN_MASK')
-                    .select('ice_mask').eq(1); //'ice_mask', 'ocean_mask'
+                    .select('ice_mask'); //'ice_mask', 'ocean_mask'
+var glims = ee.Image().paint(ee.FeatureCollection('GLIMS/current'), 1);          
+var iceMask = ee.ImageCollection([
+  greenlandmask,
+  glims.rename('ice_mask')
+]).mosaic().eq(1);
+
 var mod = ee.ImageCollection('MODIS/006/MOD10A1').filter(imgfilter)
               .map(function(image){
                   return image.select(['Snow_Albedo_Daily_Tile'])
@@ -49,7 +55,10 @@ var dataset = joinedMODIS.map(function(feature) {
 
 var imDiff = dataset.map(function(image){
   var imDiff = image.select('MODalbedo').subtract(image.select('MYDalbedo')).rename('imDiff');
-  return image.addBands(imDiff);
+  var imMean = (image.select('MODalbedo').add(image.select('MYDalbedo'))).multiply(0.5)
+  var imNoise = imDiff.abs().divide(imMean.abs());
+  var immask = imNoise.lt(1);
+  return image.addBands(imDiff.updateMask(immask));
 });
 
 // var medianDelta = imDiff.filterDate("2002-01-01", "2019-12-31").select('imDiff').median(); // experiment at pixel level 
@@ -66,7 +75,8 @@ var dt = dtSeries.select('dt').median();
 var palettes = require('users/gena/packages:palettes');
 var dtvis = {min:-0.15, max:0.15, palette: palettes.colorbrewer.RdBu[11]};
 Map.setCenter(-41.0, 74.0, 4);
-Map.addLayer(dt.updateMask(greenlandmask), dtvis , 'd(t)');
+Map.setOptions('TERRAIN');
+Map.addLayer(dt.updateMask(iceMask), dtvis , 'd(t)');
 
 /**
 * Webapp UI
@@ -205,44 +215,6 @@ polygon: '🔺',
 point: '📍',
 line: '📍',
 };
-// var selectedBand;
-// var controlPanel = ui.Panel({
-// widgets: [
-//   ui.Label('0. Select the band.'),
-// //   ui.Select({
-// //     items: Object.keys(MODISband),
-// //     onChange: function(key) {
-// //       selectedBand = MODISband[key];
-    
-// //   }}),
-//   ui.Label('1. Select a drawing mode.'),
-//   ui.Button({
-//     label: symbol.rectangle + ' Rectangle',
-//     onClick: drawRectangle,
-//     style: {stretch: 'horizontal'}
-//   }),
-//   ui.Button({
-//     label: symbol.polygon + ' Polygon',
-//     onClick: drawPolyline,
-//     style: {stretch: 'horizontal'}
-//   }),
-//   ui.Button({
-//     label: symbol.point + ' Point',
-//     onClick: drawPoint,
-//     style: {stretch: 'horizontal'}
-//   }),
-//   ui.Label('2. Draw a geometry.'),
-//   ui.Label('3. Wait for chart to render.'),
-//   ui.Label(
-//       '4. Repeat 0-3 or edit/move\ngeometry for a new chart.',
-//       {whiteSpace: 'pre'})
-// ],
-// style: {position: 'bottom-left'},
-// layout: null,
-// });
-
-// Map.add(controlPanel);
-// Map.setCenter(-40.764, 74.817, 5);
 
 
 
@@ -258,8 +230,10 @@ app.intro = {
       value: 'MODIS Orbit Drift Effect',
       style: {fontWeight: 'bold', fontSize: '24px', margin: '10px 5px'}
     }),
-    ui.Label('This app allows you to visualize the orbit drift effect on time series of albedo and obtain summer time series of MOD (MOD10A1.006) and MYD (MYD10A1.006) albedo. ' +
-             'Simply click and draw a point on the map! ')
+    ui.Label('This app allows you to visualize the orbit drift effect (d(t)) on time series of albedo and obtain summer time series of MOD (MOD10A1.006) and MYD (MYD10A1.006) albedo. ' +
+             'Simply click and draw a point on the map! ' ),
+    ui.Label('NOTE: this web app calculates d(t) at pixel level for the entire Greenland Ice Sheet and glaciers recorded in the GLIMS database. '+
+             'So the median\u0394\u03B1 is adjusted for each pixel individually.')             
   ])
 };
 
@@ -438,7 +412,6 @@ var main = ui.Panel({
   ],
   style: {width: '320px', padding: '8px'}
 });
-// Map.setCenter(-97, 26, 9);
 ui.root.insert(0, main);
 
 };

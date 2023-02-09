@@ -39,8 +39,11 @@ var dataset = joinedMODIS.map(function(feature) {
 
 var imDiff = dataset.map(function(image){
     var imDiff = image.select('MODalbedo').subtract(image.select('MYDalbedo')).rename('imDiff');
-    return image.addBands(imDiff);
-});
+    var imMean = (image.select('MODalbedo').add(image.select('MYDalbedo'))).multiply(0.5)
+    var imNoise = imDiff.abs().divide(imMean.abs());
+    var immask = imNoise.lt(1);
+    return image.addBands(imDiff.updateMask(immask));
+  });
 
 // var medianDelta = imDiff.filterDate("2002-01-01", "2019-12-31").select('imDiff').median(); // experiment at pixel level 
 var medianDelta = ee.Image(0);
