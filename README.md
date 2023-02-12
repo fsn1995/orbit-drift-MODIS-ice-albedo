@@ -31,7 +31,7 @@ Then the orbit drift effect can be quantified using the following scripts:
 - [gee/MOD-orbit-drift-viewer.js](gee/MOD-orbit-drift-viewer.js)
 - [gee/MOD-orbit-drift.js](gee/MOD-orbit-drift.js)
 
-An EE web applicaiton ([MOD-orbit-drift-viewer, in test mode now](https://code.earthengine.google.com/e88a704381c2202c1361812771b6380d)) is available for users to interactively view the orbit drift effect, and extract time series of summer albedo (June-August) and orbidt drift effect at point of interest. 
+An EE web applicaiton ([MOD-orbit-drift-viewer, in test mode now](https://code.earthengine.google.com/fa48799ddc29c10f2fb931098f024941)) is available for users to interactively view the orbit drift effect, and extract time series of summer albedo (June-August) and orbidt drift effect at point of interest. 
 It calculates the orbit drift (d(t)) at pixel level and adjusts the $median\Delta\alpha(t)$ for each pixel individually. 
 The change is made to enable users to do a quick assessement of the d(t) globally. 
 The area of interest covers the entire Greenland Ice Sheet and glaciers recorded in the GLIMS database. 
