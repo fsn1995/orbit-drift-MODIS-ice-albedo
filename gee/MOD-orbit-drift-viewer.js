@@ -230,7 +230,7 @@ app.intro = {
       value: 'MODIS Orbit Drift Effect',
       style: {fontWeight: 'bold', fontSize: '24px', margin: '10px 5px'}
     }),
-    ui.Label('This app allows you to visualize the orbit drift effect (d(t)) on time series of albedo and obtain summer time series of MOD (MOD10A1.006) and MYD (MYD10A1.006) albedo. ' +
+    ui.Label('This app allows you to visualize the orbit drift effect (d(t)) on time series of MOD albedo, and obtain summer time series of MOD (MOD10A1.006) and MYD (MYD10A1.006) albedo. ' +
              'Simply click and draw a point on the map! ' ),
     ui.Label('NOTE: this web app calculates d(t) at pixel level for the entire Greenland Ice Sheet and glaciers recorded in the GLIMS database. '+
              'So the median\u0394\u03B1 is adjusted for each pixel individually.')             
