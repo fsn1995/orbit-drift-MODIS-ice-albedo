@@ -12,17 +12,17 @@ sns.set_theme(style="darkgrid", font="Arial", font_scale=2)
 df = pd.read_excel("stat.xlsx", sheet_name="dt")
 df["dt"] = df.dt.round(2)
 
-fig, ax = plt.subplots(figsize=(7,3)) #figsize=(8,7)
+fig, ax = plt.subplots(figsize=(3,7)) #figsize=(8,7)
 sns.barplot(
-    data=df, x="year", y="dt", hue="sensor", ax=ax
+    data=df, x="dt", y="year", hue="sensor", ax=ax
 )
-ax.tick_params(axis='x', labelrotation = 45)
-ax.set(xlabel="", ylabel="$d(t)$")
-sns.move_legend(ax, "upper left", bbox_to_anchor=(-0.05, 1.3), ncol=3, title=None)
+# ax.tick_params(axis='x', labelrotation = 45)
+ax.set(xlabel="$d(t)$", ylabel="")
+sns.move_legend(ax, "upper left", bbox_to_anchor=(-0.6, 1.25), ncol=2, title=None)
 # ax.annotate("a)", xy=(0.05, 0.8),  xycoords='axes fraction')
 # sns.move_legend(ax, "upper left", bbox_to_anchor=(0.09, -0.65), ncol=2, title=None)
 
-fig.savefig("print/dt.pdf", dpi=300, bbox_inches="tight")
+# fig.savefig("print/dt.pdf", dpi=300, bbox_inches="tight")
 fig.savefig("print/dt.png", dpi=300, bbox_inches="tight")
 
 

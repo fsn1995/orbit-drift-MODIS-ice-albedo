@@ -1,6 +1,5 @@
 '''
-This part of script is to compare the spatial resolution of harmonized multisat
-albedo and MODIS albedo product.
+This part of script is to map the random sampling points.
 Users will need QGIS and the qgis-earthengine-plugin: https://gee-community.github.io/qgis-earthengine-plugin/
 
 Shunan Feng (shunan.feng@envs.au.dk)
