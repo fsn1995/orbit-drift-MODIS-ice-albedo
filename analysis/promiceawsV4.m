@@ -1,6 +1,6 @@
 %% load promice aws cloud cover data
 
-urllist = readtable("C:\Users\au686295\Documents\GitHub\PhD\orbit-drift-MODIS-ice-albedo\shp\data_urls_edition4","Delimiter",',');
+urllist = readtable("C:\Users\au686295\OneDrive - Aarhus Universitet\Documents\GitHub\PhD\orbit-drift-MODIS-ice-albedo\shp\data_urls_edition4.csv","Delimiter",',');
 
 for i = 1:length(urllist.data_name)
     opts = detectImportOptions(string(urllist.data_url(i)));

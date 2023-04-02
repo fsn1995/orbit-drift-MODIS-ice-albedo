@@ -17,6 +17,7 @@ Due to memeory limitations on GEE and S3 albedo is not yet available on GEE, HSA
 - [analysis/randomAlbedoExtractionS3.m](analysis/randomAlbedoExtractionS3.m), using [geotiffinterp](https://www.mathworks.com/matlabcentral/fileexchange/47899-geotiffinterp) made by [Chad Greene](https://github.com/chadagreene). 
 
 The random sampling sites and PROMICE AWS data url links are all available in the shp folder. PROMICE AWS edition 4 data were batch downloaded and processed for analysis.
+Point scale albeod data are extracted using the scripts in the [development and validation of harmonized satellite albedo](https://github.com/fsn1995/Remote-Sensing-of-Albedo)
 - [analysis/promiceawsV4.m](analysis/promiceawsV4.m)
 
 ## Orbital Drift Effect
