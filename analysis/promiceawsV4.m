@@ -88,6 +88,7 @@ exportgraphics(f2,'print/ccBox.png','Resolution',300);
 f3 = figure;
 meanCloud = groupsummary(df.cc, df.year, 'mean');
 b = boxchart(df.year,df.cc, 'Notch', 'on');
+b.BoxMedianLineColor = 'red';
 grid on
 xlim([2006.5,2022.5]);
 ylabel("cloud cover");

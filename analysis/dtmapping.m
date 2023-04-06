@@ -6,6 +6,7 @@ t = tiledlayout(1,3);
 
 ax1 = nexttile;
 [A, x, y, I] = geoimread("H:\AU\orbit\medianDeltamasked.tif");
+fprintf("median is %d, std is %d \n", median(A(),"all", "omitnan"), std(A(:), "omitnan"));
 [X, Y] = meshgrid(x, y);
 
 
@@ -13,7 +14,7 @@ greenland()
 
 mapshow(ax1, X, Y, A, DisplayType="surface");
 cb = colorbar(ax1);
-clim([-0.10, 0.10]);
+clim([-0.03, 0.03]);
 cmocean('-balance');
 scalebarpsn('location','se');
 cb.Label.String = 'median\Delta\alpha(2002-2019)';
@@ -24,6 +25,7 @@ axis off
 %% d(t) mapping
 ax2 = nexttile;
 [A, x, y, I] = geoimread("H:\AU\orbit\dtmasked.tif");
+fprintf("median is %d, std is %d \n", median(A(),"all", "omitnan"), std(A(:), "omitnan"));
 [X, Y] = meshgrid(x, y);
 
 greenland()
