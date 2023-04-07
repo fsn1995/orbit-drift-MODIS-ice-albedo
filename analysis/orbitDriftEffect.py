@@ -105,8 +105,8 @@ print('2022: \ny={0:.4f}x+{1:.4f}\nOLS_r:{2:.2f}, p:{3:.3f}, rmse:{4:.2f}, bias:
 fig, ax = plt.subplots(1,4, sharey='row', figsize=(20,4)) #figsize=(8,7)
 
 sns.lineplot(ax=ax[0], data=dfaws, x="time", y="PROMICE", label="PROMICE", color="k")
-sns.scatterplot(ax=ax[0], data=dfmod, x="time", y="MOD", label="MOD", alpha=0.5)
-sns.scatterplot(ax=ax[0], data=dfmyd, x="time", y="MYD", label="MYD", alpha=0.5)
+sns.scatterplot(ax=ax[0], data=dfmod, x="time", y="MOD", label="MOD10", alpha=0.5)
+sns.scatterplot(ax=ax[0], data=dfmyd, x="time", y="MYD", label="MYD10", alpha=0.5)
 sns.scatterplot(ax=ax[0], data=dfhsa, x="time", y="HSA", label="HSA", alpha=0.5)
 sns.scatterplot(ax=ax[0], data=dfs3, x="time", y="S3", label="S3", alpha=0.5, color="purple")
 ax[0].set_xlim(pd.to_datetime("2019-06-01"), pd.to_datetime("2019-08-31"))
