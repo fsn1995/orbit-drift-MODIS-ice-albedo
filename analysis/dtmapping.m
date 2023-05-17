@@ -14,7 +14,7 @@ greenland()
 
 mapshow(ax1, X, Y, A, DisplayType="surface");
 cb = colorbar(ax1);
-clim([-0.03, 0.03]);
+clim([-0.1, 0.1]);
 cmocean('-balance');
 scalebarpsn('location','se');
 cb.Label.String = 'median\Delta\alpha(2002-2019)';
@@ -66,4 +66,4 @@ text(ax3,5, 120, 'c)', 'FontSize',20);
 %% export
 t.TileSpacing = 'compact';
 t.Padding = 'compact';
-% exportgraphics(t, 'print/dtall.pdf', 'Resolution',300);
+exportgraphics(t, 'print/dtall.pdf', 'Resolution',300);
