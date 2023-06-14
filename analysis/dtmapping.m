@@ -10,7 +10,7 @@ fprintf("median is %d, std is %d \n", median(A(),"all", "omitnan"), std(A(:), "o
 [X, Y] = meshgrid(x, y);
 
 
-greenland()
+greenland('k')
 
 mapshow(ax1, X, Y, A, DisplayType="surface");
 cb = colorbar(ax1);
@@ -28,7 +28,7 @@ ax2 = nexttile;
 fprintf("median is %d, std is %d \n", median(A(),"all", "omitnan"), std(A(:), "omitnan"));
 [X, Y] = meshgrid(x, y);
 
-greenland()
+greenland('k')
 
 mapshow(ax2, X, Y, A, DisplayType="surface");
 cb = colorbar(ax2);

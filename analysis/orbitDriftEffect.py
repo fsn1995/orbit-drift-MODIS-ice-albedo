@@ -1,3 +1,12 @@
+'''
+Description: This script is used to generate figures for the manuscript.
+More details can be found in the manuscript.
+
+
+Created on Wed Aug 25 2021
+Author: Shunan Feng (shunan.feng@envs.au.dk)
+
+'''
 #%% 
 import pandas as pd
 import seaborn as sns

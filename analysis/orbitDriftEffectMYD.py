@@ -1,3 +1,14 @@
+
+'''
+Description: This script is used to generate figures for the manuscript.
+The script is used to compare the MODIS Terra albedo with the HSA albedo.
+More details can be found in the manuscript.
+
+
+Created on Wed Aug 25 2021
+Author: Shunan Feng (shunan.feng@envs.au.dk)
+
+'''
 #%% 
 import pandas as pd
 import seaborn as sns
@@ -6,7 +17,7 @@ import matplotlib.dates as mdates
 import vaex as vx
 import numpy as np
 from scipy import stats
-from pylr2.regress2 import regress2
+# from pylr2.regress2 import regress2
 from sklearn.metrics import mean_squared_error #, r2_score
 sns.set_theme(style="darkgrid", font="Arial", font_scale=2)
 # %%

@@ -1,3 +1,9 @@
+'''
+The following scripts are to extract the view time of MODIS Terra and Aqua and plot the time series along different latitudes.
+The view time is defined as the local time when the satellite passes the specified latitudes.
+
+Shunan Feng (shunan.feng@envs.au.dk)
+'''
 # %% 
 import geemap
 import ee

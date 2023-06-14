@@ -2,7 +2,7 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Ffsn1995%2Forbit-drift-MODIS-ice-albedo&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 # Orbital drift effect on time series of MODIS snow albedo (MOD10A1)
 
-This repository contains code used in a manuscript that is currently under peer review. The code extracts albedo data from various sources, including MOD10A1.006, MYD10A1.006, Harmonized Satellite Albedo, and Sentinel-3 bare ice albedo. The data is extracted at randomly generated sampling sites over the entire Greenland Ice Sheet.
+This repository contains code used in a manuscript that is submitted for peer review. The code extracts albedo data from various sources, including MOD10A1.006, MYD10A1.006, Harmonized Satellite Albedo, and Sentinel-3 bare ice albedo. The data is extracted at randomly generated sampling sites over the entire Greenland Ice Sheet.
 
 ## Albedo Extraction
 - [gee/randomSampleBuffer.js](gee/randomSampleBuffer.js)
