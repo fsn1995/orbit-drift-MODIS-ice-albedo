@@ -1,11 +1,12 @@
 /**
- * This app would allow users to explore the orbit drift effect of MOD albedo and obtain time sereis of MOD and MYD albedo data. 
+ * This script would allow users to explore the orbit drift effect of MOD albedo and obtain time sereis of MOD and MYD albedo data. 
+ * 
  * shunan.feng@envs.au.dk 
  */
 
 
 /**
- * Data Preparation and Processing
+ * dt: orbit drift effect of MOD albedo quantified
  */
 var aoi = /* color: #ffc82d */ee.Geometry.Polygon(
   [[[-36.29516924635421, 83.70737243835941],
