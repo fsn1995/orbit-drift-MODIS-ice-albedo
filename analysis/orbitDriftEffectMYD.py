@@ -44,6 +44,39 @@ dfmyd["year"] = dfmyd.date.dt.year.astype(float)
 dfmyd["month"] = dfmyd.date.dt.month.astype(float)
 dfmyd["day"] = dfmyd.date.dt.day.astype(float)
 
+#%% plot the annual long time series of MOD albedo
+df = pd.merge(left=dfmod, right=dfmyd.drop(columns=["year", "month", "day"]), 
+              on=["lat", "lon", "date"]).dropna()
+df.to_csv("/data/shunan/data/orbit/modmydmerge.csv") # save the merged data             
+# df = df[np.abs( (df.albedoMOD - df.albedoMYD) / (df.albedoMOD + df.albedoMYD) ) < 0.5]
+#%%
+years = np.arange(2002, 2023, dtype=np.double)
+modMean = years
+modStd = years
+mydMean = years
+mydStd = years
+
+for i in range(len(years)):
+    y=years[i]
+    df_filtered = df[df.year==y]
+    # modMean[i] = np.mean(df_filtered.albedoMOD)
+    # modStd[i] = np.std(df_filtered.albedoMOD)
+    # print('Year: %d, mean=%.4f, median=%.4f, RMSE=%.4f, std=%.4f' % (
+    #     y, np.mean(df_filtered.albedoMOD),
+    #     np.median(df_filtered.albedoMOD),
+    #     mean_squared_error(df_filtered.albedoMOD, df_filtered.albedoMYD, squared=False),
+    #     np.std(df_filtered.albedoMOD)
+    # ))
+    mydMean[i] = np.mean(df_filtered.albedoMYD)
+    mydStd[i] = np.std(df_filtered.albedoMYD)
+    print('Year: %d, mean=%.4f, median=%.4f, RMSE=%.4f, std=%.4f' % (
+        y, np.mean(df_filtered.albedoMYD),
+        np.median(df_filtered.albedoMYD),
+        mean_squared_error(df_filtered.albedoMOD, df_filtered.albedoMYD, squared=False),
+        np.std(df_filtered.albedoMYD)
+    ))
+
+
 #%%
 ''' how many nan values per year?'''
 dfclass = pd.read_csv("/data/shunan/data/orbit/poiMODIS5kmclass.csv")
@@ -104,14 +137,15 @@ df = vx.from_pandas(df)
 '''
 orbit drift impact estimated from MYD
 '''
-years = np.arange(2002, 2021)
+years = np.arange(2002, 2023)
 for y in years:
     df_filtered = df[df.year==y]
     df_filtered["diff"] = df_filtered.albedoMOD - df_filtered.albedoMYD
-    print('Year: %d, diff mean=%.4f, diff median=%.4f, RMSE=%.4f' % (
+    print('Year: %d, diff mean=%.4f, diff median=%.4f, RMSE=%.4f, std=%.4f' % (
         y, np.mean(df_filtered["diff"].values), 
         np.median(df_filtered["diff"].values),
-        mean_squared_error(df_filtered.albedoMOD.values, df_filtered.albedoMYD.values, squared=False)
+        mean_squared_error(df_filtered.albedoMOD.values, df_filtered.albedoMYD.values, squared=False),
+        np.std(df_filtered["diff"].values)
     ))
 
 
