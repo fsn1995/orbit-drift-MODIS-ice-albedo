@@ -21,7 +21,7 @@ var iceMask = ee.ImageCollection([
   glims.rename('ice_mask')
 ]).mosaic().eq(1);
 
-var mod = ee.ImageCollection('MODIS/006/MOD10A1').filter(imgfilter)
+var mod = ee.ImageCollection('MODIS/061/MOD10A1').filter(imgfilter)
               .map(function(image){
                   return image.select(['Snow_Albedo_Daily_Tile'])
                               .rename('MODalbedo')
@@ -31,7 +31,7 @@ var mod = ee.ImageCollection('MODIS/006/MOD10A1').filter(imgfilter)
                               // .set({date: ee.Date(image.get('system:time_start')).format('YYYY-MM-DD')});
                 });       
 
-var myd = ee.ImageCollection('MODIS/006/MYD10A1').filter(imgfilter)
+var myd = ee.ImageCollection('MODIS/061/MYD10A1').filter(imgfilter)
               .map(function(image){
                   return image.select(['Snow_Albedo_Daily_Tile'])
                               .rename('MYDalbedo')
@@ -230,7 +230,7 @@ app.intro = {
       value: 'MODIS Orbit Drift Effect',
       style: {fontWeight: 'bold', fontSize: '24px', margin: '10px 5px'}
     }),
-    ui.Label('This app allows you to visualize the orbit drift effect (d(t)) on time series of MOD albedo, and obtain summer time series of MOD (MOD10A1.006) and MYD (MYD10A1.006) albedo. ' +
+    ui.Label('This app allows you to visualize the orbit drift effect (d(t)) on time series of MOD albedo, and obtain summer time series of MOD (MOD10A1.061) and MYD (MYD10A1.061) albedo. ' +
              'Simply click and draw a point on the map! ' ),
     ui.Label('NOTE: this web app calculates d(t) at pixel level for the entire Greenland Ice Sheet and glaciers recorded in the GLIMS database. '+
              'So the median\u0394\u03B1 is adjusted for each pixel individually.')             
@@ -291,7 +291,8 @@ app.deeppurple ={
   panel: ui.Panel([
     ui.Label("The Deep Purple project receives funding from the European Research Council (ERC) under the European Union's Horizon 2020 research and innovation programme under grant agreement No 856416."),
     ui.Label("https://www.deeppurple-ercsyg.eu/home", {}, "https://www.deeppurple-ercsyg.eu/home"),
-    ui.Label("https://github.com/fsn1995/orbit-drift-MODIS-ice-albedo", {}, "https://github.com/fsn1995/orbit-drift-MODIS-ice-albedo")
+    ui.Label("https://github.com/fsn1995/orbit-drift-MODIS-ice-albedo", {}, "https://github.com/fsn1995/orbit-drift-MODIS-ice-albedo"),
+    ui.Label("Feng, S., Wehrlé, A., Cook, J.M., Anesio, A.M., Box, J.E., Benning, L.G., Tranter, M., 2024. The apparent effect of orbital drift on time series of MODIS MOD10A1 albedo on the Greenland ice sheet. Sci. Remote Sens. 9, 100116. https://doi.org/10.1016/j.srs.2023.100116", {}, "https://doi.org/10.1016/j.srs.2023.100116")
   ])
 };
 }

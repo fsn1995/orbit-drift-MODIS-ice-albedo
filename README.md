@@ -4,6 +4,10 @@
 
 This repository contains code used in a manuscript that is submitted for peer review. The code extracts albedo data from various sources, including MOD10A1.006, MYD10A1.006, Harmonized Satellite Albedo, and Sentinel-3 bare ice albedo. The data is extracted at randomly generated sampling sites over the entire Greenland Ice Sheet.
 
+```
+Feng, S., Wehrlé, A., Cook, J.M., Anesio, A.M., Box, J.E., Benning, L.G., Tranter, M., 2024. The apparent effect of orbital drift on time series of MODIS MOD10A1 albedo on the Greenland ice sheet. Sci. Remote Sens. 9, 100116. https://doi.org/10.1016/j.srs.2023.100116
+```
+
 ## Albedo Extraction
 - [gee/randomSampleBuffer.js](gee/randomSampleBuffer.js)
 - [gee/randomAlbedoExtraction.js](gee/randomAlbedoExtraction.js)
@@ -40,9 +44,23 @@ An EE web applicaiton ([MOD-orbit-drift-viewer](https://fsn1995.users.earthengin
 It calculates the orbital drift (d(t)) at pixel level and adjusts the $median\Delta\alpha(t)$ for each pixel individually. 
 The change is made to enable users to do a quick assessement of the d(t) globally. 
 The area of interest covers the entire Greenland Ice Sheet and glaciers recorded in the GLIMS database. 
+It's updated to MOD10A1.061 and MYD10A1.061 now.
 <!-- Due to limitations of GEE, the map tile projection cannot be changed. A better visulization is available in a separate web map ([MOD-orbit-drift](https://code.earthengine.google.com/6a1271c481952c663a6a3a4e54ae06c2), EPSG:3411). -->
 
-
+# citation
+```
+@article{FENG2024100116,
+title = {The apparent effect of orbital drift on time series of MODIS MOD10A1 albedo on the Greenland ice sheet},
+journal = {Science of Remote Sensing},
+volume = {9},
+pages = {100116},
+year = {2024},
+issn = {2666-0172},
+doi = {https://doi.org/10.1016/j.srs.2023.100116},
+url = {https://www.sciencedirect.com/science/article/pii/S266601722300041X},
+author = {Shunan Feng and Adrien Wehrlé and Joseph Mitchell Cook and Alexandre Magno Anesio and Jason Eric Box and Liane G. Benning and Martyn Tranter},
+keywords = {Orbit drift, MODIS, Albedo, Greenland ice sheet, Time series, Google Earth Engine}}
+```
 
 ```
 +---analysis
