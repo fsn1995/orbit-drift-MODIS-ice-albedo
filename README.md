@@ -4,9 +4,8 @@
 
 This repository contains code used in a manuscript that is submitted for peer review. The code extracts albedo data from various sources, including MOD10A1.006, MYD10A1.006, Harmonized Satellite Albedo, and Sentinel-3 bare ice albedo. The data is extracted at randomly generated sampling sites over the entire Greenland Ice Sheet.
 
-```
 Feng, S., Wehrlé, A., Cook, J.M., Anesio, A.M., Box, J.E., Benning, L.G., Tranter, M., 2024. The apparent effect of orbital drift on time series of MODIS MOD10A1 albedo on the Greenland ice sheet. Sci. Remote Sens. 9, 100116. https://doi.org/10.1016/j.srs.2023.100116
-```
+
 
 ## Albedo Extraction
 - [gee/randomSampleBuffer.js](gee/randomSampleBuffer.js)
